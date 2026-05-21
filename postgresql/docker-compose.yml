@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgis/postgis:16-3.4
+    container_name: ecommify_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ecommify
+      POSTGRES_USER: ecommify_user
+      POSTGRES_PASSWORD: ecommify_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
