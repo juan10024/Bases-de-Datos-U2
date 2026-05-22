@@ -1,3 +1,15 @@
+-- ============================================================================
+-- MAESTRÍA EN ARQUITECTURA DE SOFTWARE
+-- DISEÑO Y OPTIMIZACIÓN DE BASES DE DATOS
+--
+-- ARCHIVO: 01_seed_sample_data.sql
+-- MÓDULO: Módulo Relacional - Datos Iniciales
+-- DESCRIPCIÓN: Inserción de un conjunto consistente de datos iniciales
+--              para pruebas de las tablas de geolocalización,
+--              clientes, vendedores, categorías, productos, inventario,
+--              órdenes (particionadas), detalles de orden, pagos y promociones.
+-- ============================================================================
+
 INSERT INTO geolocation (
     geolocation_id,
     zip_code,

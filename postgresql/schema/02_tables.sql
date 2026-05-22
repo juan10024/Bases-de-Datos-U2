@@ -1,3 +1,20 @@
+-- ============================================================================
+-- MAESTRÍA EN ARQUITECTURA DE SOFTWARE
+-- DISEÑO Y OPTIMIZACIÓN DE BASES DE DATOS
+--
+-- ARCHIVO: 02_tables.sql
+-- MÓDULO: Módulo Relacional - Esquema (PostgreSQL)
+-- DESCRIPCIÓN: Creación de las tablas principales del modelo relacional
+--              normalizado (3FN) para Ecommify (geolocation, customers,
+--              sellers, categories, products, inventory, orders, order_items,
+--              payments, promotions). Incluye llaves primarias, foráneas,
+--              restricciones CHECK y la especificación de particionamiento
+--              para la tabla de órdenes por fecha de compra.
+-- AUTORES: Juan Daniel Valderrama Pérez
+--          Jorge Esteban Triviño Correa
+--          Javier Andres Baron Fontanilla
+-- ============================================================================
+
 CREATE TABLE geolocation (
                              geolocation_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                              zip_code VARCHAR(15) NOT NULL,

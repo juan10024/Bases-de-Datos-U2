@@ -1,3 +1,16 @@
+-- ============================================================================
+-- MAESTRÍA EN ARQUITECTURA DE SOFTWARE
+-- DISEÑO Y OPTIMIZACIÓN DE BASES DE DATOS
+--
+-- ARCHIVO: 02_search_queries.sql
+-- MÓDULO: Módulo Relacional - Consultas Especiales y de Búsqueda
+-- DESCRIPCIÓN: Consultas demostrativas de características avanzadas en PostgreSQL:
+--              * Coincidencia difusa y tolerancia a errores tipográficos usando pg_trgm.
+--              * Consultas y filtros sobre documentos JSONB (especificaciones técnicas).
+--              * Desanidado (unnest) de colecciones/arreglos para imágenes de productos.
+--              * Filtrado dinámico de promociones mediante exclusión/pertenencia en tstzrange.
+-- ============================================================================
+
 -- Búsqueda tolerante a errores con pg_trgm
 SELECT
     product_id,

@@ -1,3 +1,15 @@
+-- ============================================================================
+-- MAESTRÍA EN ARQUITECTURA DE SOFTWARE
+-- DISEÑO Y OPTIMIZACIÓN DE BASES DE DATOS
+--
+-- ARCHIVO: 05_triggers.sql
+-- MÓDULO: Módulo Relacional - Esquema
+-- DESCRIPCIÓN: Definición de una función almacenada en PL/pgSQL y creación
+--              de triggers BEFORE UPDATE en múltiples tablas transaccionales.
+--              Garantiza la actualización automática de la columna `updated_at`
+--              con la marca de tiempo actual (CURRENT_TIMESTAMP) al modificar registros.
+-- ============================================================================
+
 CREATE OR REPLACE FUNCTION update_timestamp()
 RETURNS TRIGGER AS $$
 BEGIN

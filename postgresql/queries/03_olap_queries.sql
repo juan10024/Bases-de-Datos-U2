@@ -1,3 +1,16 @@
+-- ============================================================================
+-- MAESTRÍA EN ARQUITECTURA DE SOFTWARE
+-- DISEÑO Y OPTIMIZACIÓN DE BASES DE DATOS
+--
+-- ARCHIVO: 03_olap_queries.sql
+-- MÓDULO: Módulo Relacional - Consultas Analíticas (OLAP)
+-- DESCRIPCIÓN: Consultas de agregación y reportes de inteligencia de negocio:
+--              * Refresco de vistas materializadas (`mv_sales_by_category_monthly`
+--                y `mv_customer_segments`).
+--              * Análisis e informes mensuales de ventas por categoría.
+--              * Reporte de segmentación de clientes por volumen de gasto.
+-- ============================================================================
+
 -- Refrescar vistas materializadas
 REFRESH MATERIALIZED VIEW mv_sales_by_category_monthly;
 REFRESH MATERIALIZED VIEW mv_customer_segments;

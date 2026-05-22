@@ -1,3 +1,17 @@
+-- ============================================================================
+-- MAESTRÍA EN ARQUITECTURA DE SOFTWARE
+-- DISEÑO Y OPTIMIZACIÓN DE BASES DE DATOS
+--
+-- ARCHIVO: 04_indexes.sql
+-- MÓDULO: Módulo Relacional - Esquema
+-- DESCRIPCIÓN: Creación de índices optimizados para el esquema relacional.
+--              Incluye índices B-Tree estándar para optimizar consultas de
+--              búsqueda y uniones (FKs), índices GIN para atributos semiestructurados
+--              (JSONB) y colecciones (arreglos), índice GIN con `pg_trgm` para
+--              búsquedas difusas en nombres de productos, e índices GiST para
+--              datos geográficos (PostGIS) y rangos temporales (TSTZRANGE).
+-- ============================================================================
+
 CREATE INDEX idx_customers_email
     ON customers(email);
 

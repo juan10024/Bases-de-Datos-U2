@@ -1,3 +1,15 @@
+-- ============================================================================
+-- MAESTRÍA EN ARQUITECTURA DE SOFTWARE
+-- DISEÑO Y OPTIMIZACIÓN DE BASES DE DATOS
+--
+-- ARCHIVO: 01_oltp_queries.sql
+-- MÓDULO: Módulo Relacional - Consultas Transaccionales (OLTP)
+-- DESCRIPCIÓN: Consultas orientadas a operaciones transaccionales diarias:
+--              * Historial de pedidos por cliente.
+--              * Detalle completo e ítems asociados a un pedido específico.
+--              * Inventario actual y stock disponible por producto y vendedor.
+-- ============================================================================
+
 -- Historial de pedidos por cliente
 SELECT
     o.order_id,

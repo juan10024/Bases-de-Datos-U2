@@ -1,3 +1,17 @@
+-- ============================================================================
+-- MAESTRÍA EN ARQUITECTURA DE SOFTWARE
+-- DISEÑO Y OPTIMIZACIÓN DE BASES DE DATOS
+--
+-- ARCHIVO: 06_views_materialized.sql
+-- MÓDULO: Módulo Relacional - Esquema
+-- DESCRIPCIÓN: Creación de vistas materializadas y sus respectivos índices.
+--              Contiene:
+--              * mv_sales_by_category_monthly: Agregado analítico mensual de
+--                ventas brutas, fletes y volumen de pedidos agrupados por categoría.
+--              * mv_customer_segments: Segmentación de clientes (HIGH_VALUE,
+--                MEDIUM_VALUE, LOW_VALUE) basada en el total acumulado de compras.
+-- ============================================================================
+
 CREATE MATERIALIZED VIEW mv_sales_by_category_monthly AS
 SELECT
     c.category_name,
