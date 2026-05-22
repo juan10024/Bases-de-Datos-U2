@@ -1,0 +1,27 @@
+{
+  "type": "object",
+  "properties": {
+    "_id": { "type": "string" },
+    "customer_id_pg": { "type": "string" },
+    "ip_address": { "type": "string" },
+    "device_info": { "type": "string" },
+    "cart_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "product_id_pg": { "type": "string" },
+          "quantity": { "type": "integer" },
+          "price_at_addition": { "type": "number" }
+        }
+      }
+    },
+    "created_at": { "type": "string" },
+    "last_activity": { "type": "string" }
+  },
+  "required": [
+    "ip_address",
+    "created_at",
+    "last_activity"
+  ]
+}

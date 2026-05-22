@@ -1,0 +1,17 @@
+{
+  "type": "object",
+  "properties": {
+    "_id": { "type": "string" },
+    "session_id": { "type": "string" },
+    "event_type": { "type": "string" },
+    "product_id_pg": { "type": "string" },
+    "page_url": { "type": "string" },
+    "event_metadata": { "type": "object" },
+    "timestamp": { "type": "string" }
+  },
+  "required": [
+    "session_id",
+    "event_type",
+    "timestamp"
+  ]
+}

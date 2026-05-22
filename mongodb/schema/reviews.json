@@ -1,0 +1,27 @@
+{
+  "type": "object",
+  "properties": {
+    "_id": { "type": "string" },
+    "review_id_pg": { "type": "string" },
+    "order_id_pg": { "type": "string" },
+    "product_id_pg": { "type": "string" },
+    "customer": {
+      "type": "object",
+      "properties": {
+        "customer_id_pg": { "type": "string" },
+        "first_name": { "type": "string" }
+      }
+    },
+    "score": { "type": "integer" },
+    "title": { "type": "string" },
+    "message": { "type": "string" },
+    "creation_date": { "type": "string" }
+  },
+  "required": [
+    "order_id_pg",
+    "product_id_pg",
+    "customer",
+    "score",
+    "creation_date"
+  ]
+}
