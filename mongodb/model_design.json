@@ -1,0 +1,83 @@
+{
+  "customers_collection_example": {
+    "_id": { "$oid": "664fa412e4b0c5a212345678" },
+    "customer_id": "06b8999e2fba1a1fbc88172c00ba8bc7",
+    "customer_unique_id": "861eff4711a542e4b93843c6dd7febb0",
+    "zip_code_prefix": "14409",
+    "city": "franca",
+    "state": "SP",
+    "locations": [
+      {
+        "coordinates": {
+          "type": "Point",
+          "coordinates": [-47.4003, -20.5333]
+        },
+        "city_name": "franca",
+        "state_code": "SP"
+      }
+    ]
+  },
+  "products_collection_example": {
+    "_id": { "$oid": "664fa412e4b0c5a212345679" },
+    "product_id": "1e9e8ef04dbcff4541ed26657ea517e5",
+    "product_category_name": "perfumaria",
+    "metrics": {
+      "name_length": 40,
+      "description_length": 287,
+      "photos_qty": 1,
+      "weight_g": 225,
+      "dimensions_cm": {
+        "length": 16,
+        "height": 10,
+        "width": 14
+      }
+    },
+    "seller_reference": {
+      "seller_id": "3442f8959a84dea7ee197c632cb2df15",
+      "seller_zip_code_prefix": "13023",
+      "seller_city": "campinas",
+      "seller_state": "SP"
+    }
+  },
+  "orders_collection_example": {
+    "_id": { "$oid": "664fa412e4b0c5a21234567a" },
+    "order_id": "e481f51cbdc54678b7cc49136f2d6af7",
+    "customer_id": "9ef432eb6251297304e76186b10a928d",
+    "order_status": "delivered",
+    "timeline": {
+      "order_purchase_timestamp": { "$date": "2017-10-02T10:56:33Z" },
+      "order_approved_at": { "$date": "2017-10-02T11:07:15Z" },
+      "order_delivered_carrier_date": { "$date": "2017-10-04T19:55:00Z" },
+      "order_delivered_customer_date": { "$date": "2017-10-10T21:25:13Z" },
+      "order_estimated_delivery_date": { "$date": "2017-10-18T00:00:00Z" }
+    },
+    "items": [
+      {
+        "order_item_id": 1,
+        "product_id": "87285b34884572647811a353c7ac887a",
+        "seller_id": "3504c0cb71d7fa48d967e0e4c94d59d9",
+        "shipping_limit_date": { "$date": "2017-10-06T11:07:15Z" },
+        "price": 29.99,
+        "freight_value": 8.72
+      }
+    ],
+    "payments": [
+      {
+        "payment_sequential": 1,
+        "payment_type": "credit_card",
+        "payment_installments": 7,
+        "payment_value": 18.12
+      }
+    ],
+    "reviews": [
+      {
+        "review_id": "a548910a1c6147796b98fdf73dbeba33",
+        "review_score": 5,
+        "review_comment_title": "bom",
+        "review_comment_message": "Muito bom o produto.",
+        "review_creation_date": { "$date": "2017-10-11T00:00:00Z" },
+        "review_answer_timestamp": { "$date": "2017-10-12T10:21:14Z" }
+      }
+    ]
+  }
+}

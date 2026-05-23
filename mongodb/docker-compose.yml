@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  mongodb_ecommify:
+    image: mongo:6.0.15
+    container_name: ecommify_nosql_container
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: ecommify_nosql
+    volumes:
+      # Montaje del script de inicialización para automatizar la creación de índices al levantar el contenedor
+     - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      # Volumen local mapeado para que los datos no se borren al apagar el contenedor
+     - mongo_ecommify_data:/data/db
+    networks:
+      - ecommify_mesh_network
+
+networks:
+  ecommify_mesh_network:
+    driver: bridge
+
+volumes:
+  mongo_ecommify_data:
+    driver: local
