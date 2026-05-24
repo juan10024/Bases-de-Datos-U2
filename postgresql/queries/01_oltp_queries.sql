@@ -7,7 +7,7 @@
 -- DESCRIPCIÓN: Consultas orientadas a operaciones transaccionales diarias:
 --              * Historial de pedidos por cliente.
 --              * Detalle completo e ítems asociados a un pedido específico.
---              * Inventario actual y stock disponible por producto y vendedor.
+--              * Promociones activas por producto usando operadores de rango.
 -- ============================================================================
 
 -- Historial de pedidos por cliente
@@ -20,11 +20,12 @@ FROM orders o
 WHERE o.customer_id = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'
 ORDER BY o.purchase_timestamp DESC;
 
--- Detalle completo de un pedido
+
+-- Detalle completo de un pedido 
 SELECT
     o.order_id,
     o.order_status,
-    p.product_name,
+    p.sku, 
     oi.quantity,
     oi.price,
     oi.freight_value,
@@ -32,24 +33,22 @@ SELECT
     pay.payment_installments,
     pay.payment_value
 FROM orders o
-         JOIN order_items oi
-              ON o.order_id = oi.order_id
-                  AND o.purchase_timestamp = oi.purchase_timestamp
-         JOIN products p
-              ON oi.product_id = p.product_id
-         JOIN payments pay
-              ON o.order_id = pay.order_id
-                  AND o.purchase_timestamp = pay.purchase_timestamp
+    JOIN order_items oi 
+        ON o.order_id = oi.order_id 
+        AND o.purchase_timestamp = oi.purchase_timestamp
+    JOIN products p 
+        ON oi.product_id = p.product_id
+    JOIN payments pay 
+        ON o.order_id = pay.order_id 
+        AND o.purchase_timestamp = pay.purchase_timestamp
 WHERE o.order_id = 'ffffffff-ffff-ffff-ffff-ffffffffffff';
 
--- Inventario disponible por producto y vendedor
-SELECT
-    p.product_name,
-    s.seller_name,
-    i.stock_quantity,
-    i.reserved_quantity,
-    (i.stock_quantity - i.reserved_quantity) AS available_stock
-FROM inventory i
-         JOIN products p ON i.product_id = p.product_id
-         JOIN sellers s ON i.seller_id = s.seller_id
-WHERE p.product_id = 'dddddddd-dddd-dddd-dddd-dddddddddddd';
+
+-- Promociones vigentes para un producto específico
+SELECT 
+    promotion_name,
+    discount_percentage,
+    promotion_period
+FROM promotions
+WHERE product_id = 'dddddddd-dddd-dddd-dddd-dddddddddddd'
+  AND promotion_period @> NOW()::timestamp; -- Evalúa si el timestamp actual está dentro del rango válido

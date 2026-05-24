@@ -9,9 +9,6 @@
 --              * pg_trgm: Operaciones de coincidencia difusa basadas en trigramas.
 --              * postgis: Soporte y almacenamiento de datos geográficos (coordenadas).
 --              * hstore: Almacenamiento de pares clave-valor para atributos dinámicos.
--- AUTORES: Juan Daniel Valderrama Pérez
---          Jorge Esteban Triviño Correa
---          Javier Andres Baron Fontanilla
 -- ============================================================================
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
