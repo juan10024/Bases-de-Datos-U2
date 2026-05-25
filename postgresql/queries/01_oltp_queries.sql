@@ -31,7 +31,10 @@ SELECT
     oi.freight_value,
     pay.payment_type,
     pay.payment_installments,
-    pay.payment_value
+    pay.payment_value,
+    pay.gateway_response ->> 'provider' AS payment_provider,
+    pay.gateway_response ->> 'authorization_code' AS authorization_code,
+    pay.gateway_response ->> 'status' AS gateway_status
 FROM orders o
     JOIN order_items oi 
         ON o.order_id = oi.order_id 
@@ -51,4 +54,4 @@ SELECT
     promotion_period
 FROM promotions
 WHERE product_id = 'dddddddd-dddd-dddd-dddd-dddddddddddd'
-  AND promotion_period @> NOW()::timestamp; -- Evalúa si el timestamp actual está dentro del rango válido
+  AND promotion_period @> TIMESTAMPTZ '2026-01-15 10:30:00-05';

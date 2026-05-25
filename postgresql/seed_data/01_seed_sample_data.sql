@@ -22,7 +22,7 @@ VALUES
     (
         '11111111-1111-1111-1111-111111111111',
         '01000',
-        'São Paulo',
+        'Sao Paulo',
         'SP',
         ST_GeogFromText('POINT(-46.6333 -23.5505)')
     ),
@@ -130,7 +130,8 @@ INSERT INTO payments (
     purchase_timestamp,
     payment_type,
     payment_installments,
-    payment_value
+    payment_value,
+    gateway_response
 )
 VALUES
     (
@@ -139,7 +140,14 @@ VALUES
         '2026-01-15 10:30:00',
         'CREDIT_CARD',
         3,
-        1500000.00
+        1500000.00,
+        '{
+        "provider": "Stripe",
+        "status": "APPROVED",
+        "authorization_code": "AUTH-20260115-001",
+        "transaction_id": "TXN-ECOMMIFY-001",
+        "response_message": "Payment approved successfully"
+        }'::jsonb
     );
 
 -- Seed promotions

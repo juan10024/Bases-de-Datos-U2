@@ -2,7 +2,7 @@
 -- MAESTRÍA EN ARQUITECTURA DE SOFTWARE
 -- DISEÑO Y OPTIMIZACIÓN DE BASES DE DATOS
 --
--- ARCHIVO: 05_triggers.sql
+-- ARCHIVO: 04_triggers.sql
 -- MÓDULO: Módulo Relacional - Esquema
 -- DESCRIPCIÓN: Definición de una función almacenada en PL/pgSQL y creación
 --              de triggers BEFORE UPDATE en múltiples tablas transaccionales.
@@ -18,6 +18,11 @@ RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE TRIGGER trg_geolocation_updated_at
+    BEFORE UPDATE ON geolocation
+    FOR EACH ROW
+    EXECUTE FUNCTION update_timestamp();
+
 CREATE TRIGGER trg_customers_updated_at
     BEFORE UPDATE ON customers
     FOR EACH ROW
@@ -28,18 +33,8 @@ CREATE TRIGGER trg_sellers_updated_at
     FOR EACH ROW
     EXECUTE FUNCTION update_timestamp();
 
-CREATE TRIGGER trg_categories_updated_at
-    BEFORE UPDATE ON categories
-    FOR EACH ROW
-    EXECUTE FUNCTION update_timestamp();
-
 CREATE TRIGGER trg_products_updated_at
     BEFORE UPDATE ON products
-    FOR EACH ROW
-    EXECUTE FUNCTION update_timestamp();
-
-CREATE TRIGGER trg_inventory_updated_at
-    BEFORE UPDATE ON inventory
     FOR EACH ROW
     EXECUTE FUNCTION update_timestamp();
 

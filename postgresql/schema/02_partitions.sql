@@ -2,7 +2,7 @@
 -- MAESTRÍA EN ARQUITECTURA DE SOFTWARE
 -- DISEÑO Y OPTIMIZACIÓN DE BASES DE DATOS
 --
--- ARCHIVO: 03_partitions.sql
+-- ARCHIVO: 02_partitions.sql
 -- MÓDULO: Módulo Relacional - Esquema
 -- DESCRIPCIÓN: Definición y creación física de las particiones mensuales
 --              por rango de fechas para el año 2026 de la tabla `orders`

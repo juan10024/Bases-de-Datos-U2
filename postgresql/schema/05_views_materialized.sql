@@ -2,19 +2,20 @@
 -- MAESTRÍA EN ARQUITECTURA DE SOFTWARE
 -- DISEÑO Y OPTIMIZACIÓN DE BASES DE DATOS
 --
--- ARCHIVO: 06_views_materialized.sql
+-- ARCHIVO: 05_views_materialized.sql
 -- MÓDULO: Módulo Relacional - Esquema
 -- DESCRIPCIÓN: Creación de vistas materializadas y sus respectivos índices.
 --              Contiene:
---              * mv_sales_by_category_monthly: Agregado analítico mensual de
---                ventas brutas, fletes y volumen de pedidos agrupados por categoría.
+--              * mv_sales_by_seller_monthly: Agregado analítico mensual de
+--                ventas brutas, fletes y volumen de pedidos agrupados por vendedor.
 --              * mv_customer_segments: Segmentación de clientes (HIGH_VALUE,
 --                MEDIUM_VALUE, LOW_VALUE) basada en el total acumulado de compras.
 -- ============================================================================
 
-CREATE MATERIALIZED VIEW mv_sales_by_category_monthly AS
+CREATE MATERIALIZED VIEW mv_sales_by_seller_monthly AS
 SELECT
-    c.category_name,
+    s.seller_id,
+    s.seller_name,
     DATE_TRUNC('month', o.purchase_timestamp) AS sales_month,
     COUNT(DISTINCT o.order_id) AS total_orders,
     SUM(oi.quantity) AS total_units,
@@ -24,15 +25,17 @@ FROM orders o
          JOIN order_items oi
               ON o.order_id = oi.order_id
                   AND o.purchase_timestamp = oi.purchase_timestamp
-         JOIN products p
-              ON oi.product_id = p.product_id
-         JOIN categories c
-              ON p.category_id = c.category_id
-GROUP BY c.category_name, DATE_TRUNC('month', o.purchase_timestamp);
+         JOIN sellers s
+              ON oi.seller_id = s.seller_id
+GROUP BY
+    s.seller_id,
+    s.seller_name,
+    DATE_TRUNC('month', o.purchase_timestamp);
 
 CREATE MATERIALIZED VIEW mv_customer_segments AS
 SELECT
     c.customer_id,
+    c.customer_unique_id,
     c.email,
     COUNT(DISTINCT o.order_id) AS total_orders,
     SUM(o.total_amount) AS total_spent,
@@ -45,7 +48,13 @@ SELECT
 FROM customers c
          JOIN orders o
               ON c.customer_id = o.customer_id
-GROUP BY c.customer_id, c.email;
+GROUP BY
+    c.customer_id,
+    c.customer_unique_id,
+    c.email;
 
 CREATE UNIQUE INDEX idx_mv_customer_segments_customer
     ON mv_customer_segments(customer_id);
+
+CREATE INDEX idx_mv_sales_by_seller_monthly
+    ON mv_sales_by_seller_monthly(seller_id, sales_month);

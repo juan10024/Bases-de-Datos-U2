@@ -2,7 +2,7 @@
 -- MAESTRÍA EN ARQUITECTURA DE SOFTWARE
 -- DISEÑO Y OPTIMIZACIÓN DE BASES DE DATOS
 --
--- ARCHIVO: 02_tables.sql
+-- ARCHIVO: 01_tables.sql
 -- MÓDULO: Módulo Relacional - Esquema
 -- DESCRIPCIÓN: Creación de las tablas principales del modelo relacional
 --              normalizado a 3FN para Ecommify. Incluye llaves primarias, foráneas,
@@ -88,6 +88,7 @@ CREATE TABLE payments (
     payment_type VARCHAR(30) NOT NULL,
     payment_installments INTEGER DEFAULT 1 CHECK (payment_installments > 0),
     payment_value NUMERIC(12,2) NOT NULL CHECK (payment_value >= 0),
+    gateway_response JSONB,
     payment_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (order_id, purchase_timestamp) REFERENCES orders(order_id, purchase_timestamp)
 );
