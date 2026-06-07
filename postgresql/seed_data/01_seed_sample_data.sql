@@ -10,7 +10,7 @@
 --              órdenes (particionadas), detalles de orden, pagos y promociones.
 -- ============================================================================
 
--- Seed geolocation
+-- 1. Geolocalizaciones
 INSERT INTO geolocation (
     geolocation_id,
     zip_code,
@@ -18,87 +18,102 @@ INSERT INTO geolocation (
     state,
     coordinates
 )
-VALUES
-    (
-        '11111111-1111-1111-1111-111111111111',
-        '01000',
-        'Sao Paulo',
-        'SP',
-        ST_GeogFromText('POINT(-46.6333 -23.5505)')
-    ),
-    (
-        '22222222-2222-2222-2222-222222222222',
-        '20000',
-        'Rio de Janeiro',
-        'RJ',
-        ST_GeogFromText('POINT(-43.1729 -22.9068)')
-    );
+SELECT
+    gen_random_uuid(),
+    LPAD((10000 + gs)::TEXT, 5, '0'),
+    'City_' || gs,
+    (ARRAY['SP','RJ','MG','PR','SC','RS','BA','PE','GO','CE'])[1 + floor(random() * 10)::int],
+    ST_SetSRID(
+        ST_MakePoint(
+            -74 + random() * 20,
+            -33 + random() * 25
+        ),
+        4326
+    )::geography
+FROM generate_series(1, 1000) gs;
 
--- Seed customers
+-- 2. Clientes
 INSERT INTO customers (
     customer_id,
-    customer_unique_id, 
+    customer_unique_id,
     first_name,
     last_name,
     email,
     phone,
     geolocation_id
 )
-VALUES
+SELECT
+    gen_random_uuid(),
+    gen_random_uuid(),
+    'Customer_' || gs,
+    'LastName_' || gs,
+    'customer_' || gs || '@ecommify.com',
+    '300' || LPAD(gs::TEXT, 7, '0'),
     (
-        'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
-        '99999999-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
-        'Pepito',
-        'Perez',
-        'pepito@email.com',
-        '3001234567',
-        '11111111-1111-1111-1111-111111111111'
-    );
+        SELECT geolocation_id
+        FROM geolocation
+        ORDER BY random()
+        LIMIT 1
+    )
+FROM generate_series(1, 50000) gs;
 
--- Seed sellers
+
+-- 3. Vendedores
 INSERT INTO sellers (
     seller_id,
     seller_name,
     email,
     geolocation_id
 )
-VALUES
+SELECT
+    gen_random_uuid(),
+    'Seller_' || gs,
+    'seller_' || gs || '@ecommify.com',
     (
-        'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
-        'Tech Seller Brasil',
-        'seller@ecommify.com',
-        '22222222-2222-2222-2222-222222222222'
-    );
+        SELECT geolocation_id
+        FROM geolocation
+        ORDER BY random()
+        LIMIT 1
+    )
+FROM generate_series(1, 5000) gs;
 
--- Seed products
+-- 4. Productos
 INSERT INTO products (
     product_id,
     sku
 )
-VALUES
-    (
-        'dddddddd-dddd-dddd-dddd-dddddddddddd',
-        'LAP-RYZ7-RTX4060-001'
-    );
+SELECT
+    gen_random_uuid(),
+    'SKU-' || gs || '-' || substr(md5(random()::text), 1, 8)
+FROM generate_series(1, 20000) gs;
 
--- Seed orders
+-- 5. Órdenes
 INSERT INTO orders (
     order_id,
     customer_id,
     order_status,
     purchase_timestamp,
+    delivered_timestamp,
     total_amount
 )
-VALUES
+SELECT
+    gen_random_uuid(),
     (
-        'ffffffff-ffff-ffff-ffff-ffffffffffff',
-        'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
-        'APPROVED',
-        '2026-01-15 10:30:00',
-        1500000.00
-    );
+        SELECT customer_id
+        FROM customers
+        ORDER BY random()
+        LIMIT 1
+    ),
+    (ARRAY['CREATED','APPROVED','SHIPPED','DELIVERED','CANCELLED'])[1 + floor(random() * 5)::int],
+    timestamp '2025-01-01'
+        + (random() * interval '364 days'),
+    timestamp '2025-01-01'
+        + (random() * interval '364 days')
+        + interval '3 days',
+    ROUND((50 + random() * 2000000)::numeric, 2)
+FROM generate_series(1, 300000) gs;
 
--- Seed order items
+-- 6. Ítems de orden
 INSERT INTO order_items (
     order_item_id,
     order_id,
@@ -110,20 +125,31 @@ INSERT INTO order_items (
     freight_value,
     shipping_limit_date
 )
-VALUES
+SELECT
+    gen_random_uuid(),
+    o.order_id,
+    o.purchase_timestamp,
     (
-        '99999999-9999-9999-9999-999999999999',
-        'ffffffff-ffff-ffff-ffff-ffffffffffff',
-        '2026-01-15 10:30:00',
-        'dddddddd-dddd-dddd-dddd-dddddddddddd',
-        'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
-        1,
-        1500000.00,
-        35000.00,
-        '2026-01-20 23:59:59'
-    );
+        SELECT product_id
+        FROM products
+        ORDER BY random()
+        LIMIT 1
+    ),
+    (
+        SELECT seller_id
+        FROM sellers
+        ORDER BY random()
+        LIMIT 1
+    ),
+    1 + floor(random() * 5)::int,
+    ROUND((20000 + random() * 1500000)::numeric, 2),
+    ROUND((5000 + random() * 50000)::numeric, 2),
+    o.purchase_timestamp + interval '7 days'
+FROM orders o
+    JOIN LATERAL generate_series(1, 1 + floor(random() * 4)::int) x(n)
+ON true;
 
--- Seed payments
+-- 7. Pagos
 INSERT INTO payments (
     payment_id,
     order_id,
@@ -131,26 +157,25 @@ INSERT INTO payments (
     payment_type,
     payment_installments,
     payment_value,
-    gateway_response
+    gateway_response,
+    payment_timestamp
 )
-VALUES
-    (
-        '88888888-8888-8888-8888-888888888888',
-        'ffffffff-ffff-ffff-ffff-ffffffffffff',
-        '2026-01-15 10:30:00',
-        'CREDIT_CARD',
-        3,
-        1500000.00,
-        '{
-        "provider": "Stripe",
-        "status": "APPROVED",
-        "authorization_code": "AUTH-20260115-001",
-        "transaction_id": "TXN-ECOMMIFY-001",
-        "response_message": "Payment approved successfully"
-        }'::jsonb
-    );
+SELECT
+    gen_random_uuid(),
+    o.order_id,
+    o.purchase_timestamp,
+    (ARRAY['CREDIT_CARD','DEBIT_CARD','BOLETO','VOUCHER'])[1 + floor(random() * 4)::int],
+    1 + floor(random() * 12)::int,
+    o.total_amount,
+    jsonb_build_object(
+        'provider', (ARRAY['Stripe','PayU','MercadoPago','Adyen'])[1 + floor(random() * 4)::int],
+        'status', (ARRAY['APPROVED','REJECTED','PENDING'])[1 + floor(random() * 3)::int],
+        'authorization_code', 'AUTH-' || substr(md5(random()::text), 1, 10),
+        'transaction_id', 'TXN-' || gen_random_uuid()
+    ),
+    o.purchase_timestamp + interval '5 minutes'
+FROM orders o;
 
--- Seed promotions
 INSERT INTO promotions (
     promotion_id,
     product_id,
@@ -158,11 +183,23 @@ INSERT INTO promotions (
     discount_percentage,
     promotion_period
 )
-VALUES
-    (
-        '77777777-7777-7777-7777-777777777777',
-        'dddddddd-dddd-dddd-dddd-dddddddddddd',
-        'January Tech Promo',
-        10.00,
-        TSTZRANGE('2026-01-01 00:00:00-05', '2026-02-01 00:00:00-05')
-    );
+SELECT
+    gen_random_uuid(),
+    p.product_id,
+    'Promo_' || gs,
+    ROUND((5 + random() * 50)::numeric, 2),
+    tstzrange(
+            start_date,
+            start_date + interval '30 days',
+            '[)'
+    )
+FROM generate_series(1, 5000) gs
+         CROSS JOIN LATERAL (
+    SELECT timestamp '2025-01-01' + (random() * interval '300 days') AS start_date
+        ) d
+         CROSS JOIN LATERAL (
+    SELECT product_id
+    FROM products
+    ORDER BY random()
+        LIMIT 1
+) p;
